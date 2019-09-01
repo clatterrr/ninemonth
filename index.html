@@ -1,52 +1,31 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
-
+<html>
 <head>
-	<meta charset="UTF-8">
-	<title>HTML5 Canvas圆盘抽奖应用DEMO演示</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-	<link rel="stylesheet" type="text/css" href="main.css">
-	<script type="text/javascript" src="jquery-1.11.3.min.js"></script>
-	<script type="text/javascript" src="main.js">
-	</script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>网页版2048</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+
 </head>
-
 <body>
-	<div class="turnplate_box">
-		<canvas id="myCanvas" width="300px" height="300px"></canvas>
-		<canvas id="myCanvas01" width="200px" height="200px"></canvas>
-		<canvas id="myCanvas03" width="200px" height="200px"></canvas>
-		<canvas id="myCanvas02" width="150px" height="150px"></canvas>
-		<button id="tupBtn" class="turnplatw_btn"></button>
-	</div>
-	<!-- 更改系统默认弹窗 -->
-	<script type="text/javascript">
-		window.alert = function (str) {
-			
-			var alertFram = document.createElement("DIV");
-			alertFram.id = "alertFram";
-			alertFram.style.position = "absolute";
-			alertFram.style.width = "280px";
-			alertFram.style.height = "150px";
-			alertFram.style.left = "50%";
-			alertFram.style.top = "50%";
-			alertFram.style.marginLeft = "-140px";
-			alertFram.style.marginTop = "-110px";
-			alertFram.style.textAlign = "center";
-			alertFram.style.lineHeight = "150px";
-			alertFram.style.zIndex = "300";
-			sstrHtml = "<ul style=\"list-style:none;margin:0px;padding:0px;width:100%\">\n";
-			sstrHtml += " <li style=\"background:#626262;text-align:left;padding-left:20px;font-size:14px;font-weight:bold;height:25px;line-height:25px;border:1px solid #F9CADE;color:white\">[你醒醒吧]</li>\n";
-			sstrHtml += " <li style=\"background:#787878;text-align:center;font-size:12px;height:95px;line-height:95px;border-left:1px solid #F9CADE;border-right:1px solid #F9CADE;color:#DCC722\">" + str + "</li>\n";
-			sstrHtml += " <li style=\"background:#626262;text-align:center;font-weight:bold;height:30px;line-height:25px; border:1px solid #F9CADE;\"><input type=\"button\" value=\"确 定\" onclick=\"press()\" style=\"width:80px;height:20px;background:#626262;color:white;border:1px solid white;font-size:14px;line-height:20px;outline:none;margin-top: 4px\"/></li>\n";
-		    sstrHtml += "</ul>\n";
-			alertFram.innerHTML = sstrHtml;
-			document.body.appendChild(alertFram);
-			this.press = function () {
-				alertFram.style.display = "none";
-			}
-		}
-	</script>
+    <header>
+        <h1>插头DP</h1>
+        
+        <p>
+            大意：给你一个n×m的棋盘,有的格子存在障碍,求经过所有非障碍格子的哈密顿回路数。
+            <br/>
+            在本网页中，点击格子可使其颜色变深/变浅，浅色格子视为无障碍格子，深色格子视为有障碍格子
+            <br/>
+            挑战：你能否在纸上画出所有情况，不重复不遗漏呢？
+            <br/>
+            <a href="javascript:plugdp();" id="newgamebutton">开始</a>
+            <br/>
+            走遍每一个格子不重复且不同的回路数:<span id="score">0</span>
+        </p>
+    </header>
+    <div id="grid-container">
+    </div>
+    <script type="text/javascript"
+    src="jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="dpjs.js"></script>
 </body>
-
 </html>

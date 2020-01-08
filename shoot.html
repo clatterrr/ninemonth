@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>SAM I AM</title>
+  <style>
+    body {
+      position: absolute;
+      width: 400px;
+      height: 600px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      border: 3px black solid;
+    }
+
+    #main {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(#c3e664, #a0a6ec 90%);
+      z-index: 99;
+    }
+
+    #grid-container {
+      height: 100%;
+      width: 100%;
+      background: #a3bba0;
+      border-radius: 10px;
+      position: absolute;
+    }
+
+    .grid-cell {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      background: #bbccb3;
+      position: absolute;
+    }
+
+    .btn {
+      width: 100px;
+      height: 30px;
+      background: blue;
+      position: absolute;
+      border-radius: 6px;
+      user-select: none;
+      box-shadow: 5px 5px 10px #888888;
+      text-align: center;
+      font-size: 15px;
+      color: whitesmoke;
+    }
+
+    .btn:active {
+      transform: translate(5px, 5px);
+    }
+
+    .btn1 {
+      top: 400px;
+      left: 40px;
+    }
+
+    .btn2 {
+
+      top: 400px;
+      left: 260px;
+    }
+
+    .btn3 {
+      background-color: red;
+      top: 430px;
+      left: 150px;
+    }
+
+    .number-cell {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      line-height: 30px;
+      font: Arial, Helvetica, sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      position: absolute;
+
+      user-select: none;
+    }
+
+    .des {
+      top: 430px;
+      width: 120px;
+      color: whitesmoke;
+      position: relative;
+      float: left;
+    }
+
+    .des1 {
+      left: 40px;
+    }
+
+    .des2 {
+      left: 140px;
+    }
+
+    #damage {
+      top: 400px;
+      left: 150px;
+      position: absolute;
+      width: 100px;
+    }
+
+    #info {
+      color: #a6d1fc;
+      font-size: 20px;
+      top: 100px;
+      left: 10px;
+      width: 300px;
+      position: absolute;
+    }
+
+    .active {
+      box-shadow: 0 0 10px #f00
+    }
+
+
+    div[class="grid-cell active"]+ :hover {
+      box-shadow: 0 0 10px greenyellow
+    }
+
+    .disactive {
+      background-color: grey;
+      color: black;
+      pointer-events: none;
+    }
+    .btndisactive
+    {
+      pointer-events: none;
+    }
+  </style>
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+  </script>
+
+
+</head>
+
+<body>
+
+
+
+  <div id="grid-container">
+  </div>
+  <div id="info">
+    这是一条提升信息
+  </div>
+  <div id="btn1" class="btn btn1" onclick="skill(1)">小刀
+  </div>
+  <div id="btn3" class="btn btn3" onclick="shoot()">选择目标
+  </div>
+  <div class="des des1">使用小刀，选择一个整数x，再选择选择一个敌人，对敌人造成x点伤害</div>
+  <input type="number" id="damage" value="">
+  <div id="btn2" class="btn btn2" onclick="skill(2)">双枪
+  </div>
+  <div class="des des2">使用双枪，选择一个整数，再选择两个敌人，对第一个敌人造成x点伤害，对第2个敌人造成x+1点伤害</div>
+</body>
+<script type="text/javascript">
+  var board = new Array(), theNumberCell = new Array();
+  var tim = 0, weapon = 0;
+  var n = 7;
+  newgame();
+  function newgame() {
+    //首先禁用射击
+    document.getElementById('btn3').classList.add('disactive');
+    document.getElementById('damage').classList.add('disactive');
+    initenemy();
+
+  }
+
+  function initenemy() {
+
+    var sdis = [200, 100, 80, 60, 60, 50], dis = [80, 80, 60, 50, 30, 30];
+    console.log(sdis[n], dis[n]);
+    for (var i = 0; i < n; i++) {
+      board[i] = Math.floor(Math.random() * 100);
+      $("#grid-container").append('<div  class = "grid-cell" id = "grid-cell-' + i + '">');
+      var gridcell = $("#grid-cell-" + i);
+      gridcell.css("top", 300);
+      gridcell.css("left", i * sdis[n - 2] + dis[n - 2]);
+      $("#grid-container").append('<div class="number-cell" id="number-cell-' + i + '" onclick = "select(' + i + ')"></div>');
+      theNumberCell[i] = $('#number-cell-' + i);
+      theNumberCell[i].css('width', '40px');
+      theNumberCell[i].css('hegiht', '40px');
+      theNumberCell[i].css('top', 300);
+      theNumberCell[i].css('left', i * sdis[n - 2] + dis[n - 2]);
+      theNumberCell[i].text(board[i]);
+      
+      document.getElementById('number-cell-' + i).classList.add('btndisactive');
+    }
+  }
+
+  function skill(idx) {
+
+    for (var i = 0; i < n; i++) {
+      document.getElementById('grid-cell-' + i).classList.remove('active');
+      document.getElementById('number-cell-' + i).classList.add('btndisactive');
+    }
+    if (idx == 1) {
+      document.getElementById('info').innerHTML = "你选择了小刀！现在请输入一个数值"
+    } else {
+      weapon = 1;
+      document.getElementById('info').innerHTML = "你选择了双枪！现在请输入一个数值"
+    }
+    //等待键盘输入
+    document.getElementById('btn1').classList.add('disactive');
+    document.getElementById('btn2').classList.add('disactive');
+    document.getElementById('btn3').classList.remove('disactive');
+    document.getElementById('damage').classList.remove('disactive');
+
+  }
+
+  function shoot(idx) {
+    for (var i = 0; i < n; i++) {
+      document.getElementById('grid-cell-' + i).classList.add('active');
+      document.getElementById('number-cell-' + i).classList.remove('btndisactive');
+    }
+    tim = 1;
+    document.getElementById('damage').classList.remove('disactive');
+    //选择一个目标
+
+  }
+
+  var iidx = -1;
+  function select(idx) {
+    if (weapon == 0) {
+
+      for (var i = 0; i < n; i++)
+      {
+       document.getElementById('grid-cell-' + i).classList.remove('active');
+       document.getElementById('number-cell-' + i).classList.add('btndisactive');
+      }
+      var dam = eval(document.getElementById('damage').value);
+      if (tim) {
+        if (iidx != - 1) {
+          board[iidx] -= dam;
+          theNumberCell[iidx].text(board[iidx]);
+        } else dam -= 1;
+        board[idx] -= (dam + 1);
+        theNumberCell[idx].text(board[idx]);
+        tim = 0;
+      }
+      var flag;
+      flag = 0;
+      document.getElementById('info').innerHTML = "攻击成功，请再选择一种武器。"
+      for (var i = 0; i < n; i++)
+        if (board[i] != 0) flag = 1;
+      if (!flag) document.getElementById('info').innerHTML = "胜利！"
+      document.getElementById('btn3').classList.add('disactive');
+      document.getElementById('btn1').classList.remove('disactive');
+      document.getElementById('btn2').classList.remove('disactive');
+      document.getElementById('damage').classList.add('disactive');
+      document.getElementById('damage').value = 0;
+      iidx = -1;
+    } else {
+      iidx = idx;
+      weapon = 0;
+      if (!flag) document.getElementById('info').innerHTML = "请再选择一个。"
+      document.getElementById('damage').classList.add('disactive');
+      document.getElementById('btn3').classList.add('disactive');
+    }
+
+  }
+</script>
+
+</html>
